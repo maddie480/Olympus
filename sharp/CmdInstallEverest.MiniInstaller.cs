@@ -112,23 +112,16 @@ namespace Olympus {
         }
 
         private static void StartMiniInstallerProcess(MiniInstallerBridge bridge, string installerPath) {
-            if (PlatformHelper.Is(Platform.MacOS) || PlatformHelper.Is(Platform.Linux)) {
-                bridge.WriteLine($"Ensuring {installerPath} is executable");
-                Process chmod = new Process();
-                chmod.StartInfo.FileName = "chmod";
-                chmod.StartInfo.Arguments = "+x " + Path.GetFileName(installerPath);
-                chmod.StartInfo.UseShellExecute = true;
-                chmod.StartInfo.WorkingDirectory = Path.GetDirectoryName(installerPath);
-                chmod.Start();
-                chmod.WaitForExit();
-            }
+#if !WIN32
+            bridge.WriteLine($"Ensuring {installerPath} is executable");
+            ProcessHelper.MakeExecutable(installerPath);
+#endif
 
             bridge.WriteLine($"Running MiniInstaller executable: {installerPath}");
 
             using (Process proc = new Process {
-                StartInfo = new ProcessStartInfo() {
+                StartInfo = new ProcessStartInfo {
                     FileName = installerPath,
-                    UseShellExecute = false,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
