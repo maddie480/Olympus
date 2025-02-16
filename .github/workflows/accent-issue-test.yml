@@ -23,7 +23,7 @@ jobs:
         Invoke-WebRequest -Uri 'https://github.com/love2d/love/releases/download/11.5/love-11.5-win32.zip' -OutFile temp.zip
         Expand-Archive -Path temp.zip -DestinationPath .
         Move-Item -Path love-11.5-win32\* -Destination olympus-install\ -Force
-        Remove-Item -Path temp.zip,love-11.5-win32 -Force -Recurse
+        Remove-Item -Path temp.zip,love-11.5-win32,olympus-install\olympus.love -Force -Recurse
 
     - name: Build source code zip
       run: |
